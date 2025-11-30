@@ -114,35 +114,35 @@ jobs:
         working-directory: ${{ env.TF_WORKING_DIR }}
         run: terraform init
 
-    #   - name: Terraform apply (ECR only)
-    #     working-directory: ${{ env.TF_WORKING_DIR }}
-    #     run: terraform apply -target=module.ecr -auto-approve
+      - name: Terraform apply (ECR only)
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform apply -target=module.ecr -auto-approve
 
-    #   - name: Get ECR repo URL
-    #     id: ecr
-    #     working-directory: ${{ env.TF_WORKING_DIR }}
-    #     run: |
-    #       echo "url=$(terraform output -raw ecr_repository_url)" >> $GITHUB_OUTPUT
+      - name: Get ECR repo URL
+        id: ecr
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: |
+          echo "url=$(terraform output -raw ecr_repository_url)" >> $GITHUB_OUTPUT
 
-    #   - name: Login to ECR
-    #     run: |
-    #       aws ecr get-login-password --region $AWS_REGION \
-    #         | docker login --username AWS --password-stdin $(echo "${{ steps.ecr.outputs.url }}" | cut -d'/' -f1)
+      - name: Login to ECR
+        run: |
+          aws ecr get-login-password --region $AWS_REGION \
+            | docker login --username AWS --password-stdin $(echo "${{ steps.ecr.outputs.url }}" | cut -d'/' -f1)
 
-    #   - name: Build Docker image
-    #     working-directory: ${{ env.TF_WORKING_DIR }}
-    #     run: |
-    #       docker build -t hello-api .
+      - name: Build Docker image
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: |
+          docker build -t hello-api .
 
-    #   - name: Tag & push image
-    #     run: |
-    #       ECR_URL="${{ steps.ecr.outputs.url }}"
-    #       docker tag hello-api:latest ${ECR_URL}:latest
-    #       docker push ${ECR_URL}:latest
+      - name: Tag & push image
+        run: |
+          ECR_URL="${{ steps.ecr.outputs.url }}"
+          docker tag hello-api:latest ${ECR_URL}:latest
+          docker push ${ECR_URL}:latest
 
-    #   - name: Terraform apply (full)
-    #     working-directory: ${{ env.TF_WORKING_DIR }}
-    #     run: terraform apply -auto-approve
+      - name: Terraform apply (full)
+        working-directory: ${{ env.TF_WORKING_DIR }}
+        run: terraform apply -auto-approve
 
       - name: Terraform destroy
         working-directory: ${{ env.TF_WORKING_DIR }}
