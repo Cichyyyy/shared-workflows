@@ -6,10 +6,10 @@ inputs:
     description: "AWS region"
     required: true
   tf-working-dir:
-    description: "Katalog z Terraformem"
+    description: "Working directory Terraformem"
     required: true
   role-arn:
-    description: "IAM role do konfiguracji AWS"
+    description: "IAM role to AWS"
     required: true
 
 runs:
