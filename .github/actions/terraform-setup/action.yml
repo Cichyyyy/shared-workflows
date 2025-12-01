@@ -1,5 +1,5 @@
 name: "Terraform common setup"
-description: "Checkout, AWS credentials, Terraform setup + init"
+description: "Checkout, AWS credentials, Terraform setup + fmt/validate + init"
 
 inputs:
   aws-region:
@@ -27,7 +27,17 @@ runs:
     - name: Setup Terraform
       uses: hashicorp/setup-terraform@v3
 
+    - name: Terraform fmt
+      working-directory: ${{ inputs.tf-working-dir }}
+      shell: bash
+      run: terraform fmt -check
+
     - name: Terraform init
       working-directory: ${{ inputs.tf-working-dir }}
       shell: bash
-      run: terraform init
+      run: terraform init -backend=false
+
+    - name: Terraform validate
+      working-directory: ${{ inputs.tf-working-dir }}
+      shell: bash
+      run: terraform validate
